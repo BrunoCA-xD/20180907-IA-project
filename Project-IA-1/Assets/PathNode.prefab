@@ -20,7 +20,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4831573231679118}
   - component: {fileID: 114122038427955438}
-  - component: {fileID: 114320009658260968}
   m_Layer: 0
   m_Name: PathNode
   m_TagString: Untagged
@@ -55,17 +54,3 @@ MonoBehaviour:
   m_PointColor: {r: 0, g: 0, b: 0, a: 0}
   m_RandiusColor: {r: 1, g: 1, b: 1, a: 1}
   m_Radius: 3
---- !u!114 &114320009658260968
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1745386052495890}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 227f4a784d27dcd4180f9b7f5c3f8380, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_PointColor: {r: 0, g: 0, b: 0, a: 0}
-  m_RandiusColor: {r: 1, g: 1, b: 1, a: 1}
-  m_Radius: 0

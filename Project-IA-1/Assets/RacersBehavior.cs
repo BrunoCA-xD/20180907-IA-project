@@ -7,6 +7,7 @@ public class RacersBehavior : MonoBehaviour {
     public float m_MaxSpeed;
     public float m_MaxForce;
     public float m_SlowingRadius;
+    public float m_Mass;
     public PathFollow m_Path;
     private Vector3 m_CurrentVelocity;
     
@@ -20,7 +21,18 @@ public class RacersBehavior : MonoBehaviour {
     // Update is called once per frame
     private void FixedUpdate()
     {
+        Vector3 steeringForce = Vector3.zero;
+        steeringForce += PathFollow();
 
+        float random = Random.Range(0.1f, 12f);
+        Vector3 acceleration = steeringForce / m_Mass;
+
+
+        m_CurrentVelocity += acceleration*random;
+
+        transform.position += m_CurrentVelocity;
+
+        transform.rotation = Quaternion.LookRotation(m_CurrentVelocity);
     }
 
     private Vector3 Seek(Vector3 target, float slowingRadius)
