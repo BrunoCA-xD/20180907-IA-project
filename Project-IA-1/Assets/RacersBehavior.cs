@@ -10,7 +10,12 @@ public class RacersBehavior : MonoBehaviour {
     public float m_Mass;
     public PathFollow m_Path;
     private Vector3 m_CurrentVelocity;
-    
+    [Header("Collision Avoidance")]
+    public float m_AvoidanceForce;
+    public float m_MaxSeeAhead;
+    public LayerMask m_ObstacleLayer;
+    public float[] m_RaycastAngles;
+
 
     // Use this for initialization
     private void Start()
@@ -24,15 +29,24 @@ public class RacersBehavior : MonoBehaviour {
         Vector3 steeringForce = Vector3.zero;
         steeringForce += PathFollow();
 
-        float random = Random.Range(0.1f, 12f);
+        for (int i = 0; i < m_RaycastAngles.Length; i++)
+        {
+            float angle = m_RaycastAngles[i];
+            steeringForce += CollisionAvoidance(angle);
+        }
+
+        steeringForce += CollisionAvoidance(0);
+        steeringForce += CollisionAvoidance(-20);
+        steeringForce += CollisionAvoidance(20);
+
         Vector3 acceleration = steeringForce / m_Mass;
+        float random = Random.Range(0.1f, 1.0f);
 
-
-        m_CurrentVelocity += acceleration*random;
+        m_CurrentVelocity += acceleration;
 
         transform.position += m_CurrentVelocity;
 
-        transform.rotation = Quaternion.LookRotation(m_CurrentVelocity);
+        transform.rotation = Quaternion.LookRotation(m_CurrentVelocity); ;
     }
 
     private Vector3 Seek(Vector3 target, float slowingRadius)
@@ -60,5 +74,30 @@ public class RacersBehavior : MonoBehaviour {
             m_Path.NextNode();
 
         return Seek((Vector3)target, m_SlowingRadius);
+    }
+
+    public Vector3 CollisionAvoidance(float angle)
+    {
+        Vector3 direction = Quaternion.AngleAxis(angle, transform.up) * transform.forward;
+        RaycastHit hitInfo;
+        if (Physics.Raycast(transform.position,//origem
+            direction,//direção
+            out hitInfo,//info da colisao
+            m_MaxSeeAhead,//distancia
+            m_ObstacleLayer//camada
+            ))
+        {
+            Debug.DrawLine(transform.position, hitInfo.point, Color.red);
+            float ratio = 1 - (hitInfo.distance / m_MaxSeeAhead);
+            return hitInfo.normal * (ratio * m_AvoidanceForce);
+        }
+        else
+        {
+            Debug.DrawLine(transform.position,
+                transform.position + direction * m_MaxSeeAhead,
+                Color.blue);
+        }
+        return Vector3.zero;
+
     }
 }
